@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Header from "./components/common/Header.js";
+import "./index.css";
 const App = () => {
   const title = "React Coin";
   return (
