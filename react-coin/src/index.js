@@ -5,6 +5,7 @@ import Header from "./components/common/Header.js";
 import "./index.css";
 import List from "./components/list/List";
 import NotFound from "./components/notfound/NotFound";
+import Detail from "./components/detail/Detail";
 const App = () => {
   return (
     <BrowserRouter>
@@ -12,6 +13,7 @@ const App = () => {
         <Header />
         <Switch>
           <Route path="/" component={List} exact />
+          <Route path="/currency/:id" component={Detail} exact />
           <Route component={NotFound} />
         </Switch>
       </div>
