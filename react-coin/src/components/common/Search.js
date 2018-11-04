@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import "./Search.css";
 import Loading from "../common/Loading";
 import { API_URL } from "../../config";
@@ -9,11 +10,13 @@ class Search extends React.Component {
     super();
 
     this.state = {
+      searchResults: [],
       searchQuery: "",
       loading: false
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleRedirect = this.handleRedirect.bind(this);
   }
 
   handleChange(e) {
@@ -31,8 +34,10 @@ class Search extends React.Component {
     fetch(`${API_URL}/autocomplete?searchQuery=${searchQuery}`)
       .then(handleResponse)
       .then(result => {
-        console.log(result);
-        this.setState({ loading: false });
+        this.setState({
+          loading: false,
+          searchResults: result
+        });
       });
 
     //add catch case, tutorial skips it as technically not needed
@@ -40,8 +45,49 @@ class Search extends React.Component {
     console.log(this.state);
   }
 
+  handleRedirect(currencyId) {
+    this.setState({
+      //clear inputs and autocomplete by clearing searchquery state
+      searchQuery: "",
+      searchResults: []
+    });
+
+    this.props.history.push(`/currency/${currencyId}`);
+  }
+
+  renderSearchResults() {
+    const { searchResults, searchQuery, loading } = this.state;
+
+    if (!searchQuery) {
+      return "";
+    }
+
+    if (searchResults.length > 0) {
+      return (
+        <div className="Search-result-container">
+          {searchResults.map(result => (
+            <div
+              key={result.id}
+              className="Search-result"
+              onClick={() => this.handleRedirect(result.id)}
+            >
+              {result.name} ({result.symbol})
+            </div>
+          ))}
+        </div>
+      );
+    }
+    if (!loading) {
+      return (
+        <div className="Search-Result-Container">
+          <div className="Search-no-result">No Results Found</div>
+        </div>
+      );
+    }
+  }
+
   render() {
-    const { loading } = this.state;
+    const { loading, searchQuery } = this.state;
     return (
       <div className="Search">
         <span className="Search-icon" />
@@ -50,6 +96,7 @@ class Search extends React.Component {
           type="text"
           placeholder="Currency Name"
           onChange={this.handleChange}
+          value={searchQuery}
         />
 
         {loading && (
@@ -57,9 +104,11 @@ class Search extends React.Component {
             <Loading width="12px" height="12px" />
           </div>
         )}
+
+        {this.renderSearchResults()}
       </div>
     );
   }
 }
 
-export default Search;
+export default withRouter(Search);
