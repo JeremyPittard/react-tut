@@ -11,7 +11,7 @@ class Detail extends React.Component {
 
     this.state = {
       currency: {},
-      loading: false,
+      loading: true,
       error: null
     };
   }
