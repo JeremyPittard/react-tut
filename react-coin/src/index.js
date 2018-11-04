@@ -1,15 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Header from "./components/common/Header.js";
 import "./index.css";
 import List from "./components/list/List";
+import NotFound from "./components/notfound/NotFound";
 const App = () => {
   return (
-    <div>
-      <Header />
-
-      <List />
-    </div>
+    <BrowserRouter>
+      <div>
+        <Header />
+        <Switch>
+          <Route path="/" component={List} exact />
+          <Route component={NotFound} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 };
 
